@@ -1,4 +1,6 @@
-column_spec=();
+sh import-authors.sh $1;
+
+column_spec=(); 
 
 columns=$(cat $1 | sed -n 1'p' | tr ',' '\n')
 
