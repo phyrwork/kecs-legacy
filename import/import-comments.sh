@@ -8,7 +8,6 @@ do
 		"id") column="@id" ;;
 		"link_id") column="@link_id" ;;
 		"parent_id") column="@parent_id" ;;
-		"author") column="@author" ;;
 		*) column=$column ;;
 	esac
 
@@ -18,8 +17,18 @@ done <<< $columns;
 
 column_spec=$(IFS=,; echo "${column_spec[*]}");
 
-sql="	LOAD DATA LOCAL INFILE '$1'
-		IGNORE INTO TABLE comment
+sql="	CREATE TEMPORARY TABLE IF NOT EXISTS comment_raw (
+			id bigint(11) unsigned NOT NULL,
+			created_utc bigint(11) unsigned NOT NULL,
+			link_id bigint(11) unsigned NOT NULL,
+			parent_id bigint(11) unsigned NOT NULL,
+			author char(20) NOT NULL,
+			score int(11) NOT NULL,
+			PRIMARY KEY (id)
+		) ENGINE=TokuDB DEFAULT CHARSET=utf8mb4;
+		
+		LOAD DATA LOCAL INFILE '$1'
+		IGNORE INTO TABLE comment_raw
 		FIELDS TERMINATED BY ',' ENCLOSED BY '\"' ESCAPED BY '\"'
 		LINES TERMINATED BY '\\n'
 		IGNORE 1 LINES
@@ -27,8 +36,11 @@ sql="	LOAD DATA LOCAL INFILE '$1'
 		SET
 			id = CONV(@id,36,10),
 			link_id = CONV(SUBSTRING(@link_id FROM 4),36,10),
-			parent_id = CONV(SUBSTRING(@parent_id FROM 4),36,10),
-			author_id = (SELECT id FROM author WHERE username = @author)
+			parent_id = CONV(SUBSTRING(@parent_id FROM 4),36,10);
+
+		INSERT INTO comment(id,created_utc,link_id,parent_id,author_id,score)
+		SELECT c.id,c.created_utc,c.link_id,c.parent_id,a.id AS author_id,c.score
+		FROM comment_raw AS c INNER JOIN author AS a ON c.author = a.username;
 	";
 
 mysql -hkecs-dev kecs <<< $sql;
