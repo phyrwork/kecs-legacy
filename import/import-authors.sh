@@ -21,6 +21,4 @@ sql="	LOAD DATA LOCAL INFILE '$1'
 		IGNORE 1 LINES
 		($column_spec);"
 
-echo $sql;
-
 mysql -hkecs-dev kecs <<< $sql;
