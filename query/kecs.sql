@@ -29,6 +29,7 @@ BEGIN
 	SET @comment_desc = CONCAT('comment_desc_s',connection_id());
 
 	-- get the user's author_id
+	SET @author_id = NULL;
 	SELECT author_id INTO @author_id FROM author WHERE username = @author;
 
 	#################
