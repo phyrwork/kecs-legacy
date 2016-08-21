@@ -5,6 +5,6 @@ do
     in=${file} ;
     out=${file//json/csv} ;
 
-    cat ${in} | json2csv -k id,created_utc,link_id,parent_id,score -p > ${out} ;
+    cat ${in} | json2csv -k id,created_utc,author,score -p > ${out} ;
 
  done
