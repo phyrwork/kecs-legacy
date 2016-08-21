@@ -10,7 +10,7 @@ do
 	for column in $columns
 	do
 		case $column in
-			"id") column="@id" ;;
+			"id") column="@comment_id" ;;
 			"link_id") column="@link_id" ;;
 			"parent_id") column="@parent_id" ;;
 			*) column=$column ;;
@@ -23,13 +23,13 @@ do
 	column_spec=$(IFS=,; echo "${column_spec[*]}");
 
 	sql="	CREATE TEMPORARY TABLE IF NOT EXISTS comment_raw (
-				id bigint(11) unsigned NOT NULL,
+				comment_id bigint(11) unsigned NOT NULL,
 				created_utc bigint(11) unsigned NOT NULL,
 				link_id bigint(11) unsigned NOT NULL,
 				parent_id bigint(11) unsigned NOT NULL,
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
-				PRIMARY KEY (id)
+				PRIMARY KEY (link_id)
 			) ENGINE=TokuDB DEFAULT CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'
@@ -39,12 +39,12 @@ do
 			IGNORE 1 LINES
 			($column_spec)
 			SET
-				id = CONV(@id,36,10),
+				comment_id = CONV(@comment_id,36,10),
 				link_id = CONV(SUBSTRING(@link_id FROM 4),36,10),
 				parent_id = CONV(SUBSTRING(@parent_id FROM 4),36,10);
 
-			INSERT INTO comment(id,created_utc,link_id,parent_id,author_id,score)
-			SELECT c.id,c.created_utc,c.link_id,c.parent_id,a.id AS author_id,c.score
+			INSERT INTO comment(comment_id,created_utc,link_id,parent_id,author_id,score)
+			SELECT c.comment_id,c.created_utc,c.link_id,c.parent_id,a.author_id AS author_id,c.score
 			FROM comment_raw AS c INNER JOIN author AS a ON c.author = a.username;
 		";
 
