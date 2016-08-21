@@ -156,13 +156,6 @@ BEGIN
 	EXECUTE create_tbl;
 	DEALLOCATE PREPARE create_tbl;
 
-	SET @sql = CONCAT('
-		SELECT * FROM ',@comment_desc
-	);
-	PREPARE select_results FROM @sql;
-	EXECUTE select_results;
-	DEALLOCATE PREPARE select_results;
-
 	-- don't hold table for any longer than is necessary
 	SET @sql = CONCAT('DROP TABLE IF EXISTS ',@comment_recu);
 	PREPARE drop_tbl FROM @sql; EXECUTE drop_tbl; DEALLOCATE PREPARE drop_tbl;
