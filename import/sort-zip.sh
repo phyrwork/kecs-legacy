@@ -1,0 +1,18 @@
+dir="/liberal/db/kecs";
+
+for file in $@
+do
+	IFS='_-' read -ra parts <<< "$file"
+
+	type=${parts[0]};
+	year=${parts[1]};
+	leaf=${parts[2]};
+
+	case $type in
+		"RC") type="comments" ;;
+		"RS") type="submissions" ;;
+		*) echo "Unknown file type. Exiting!"; exit 1 ;;
+	esac
+
+	mv "$file" "$dir/$type/$year/$leaf";
+done
