@@ -11,7 +11,7 @@ do
 	fi
 
 	case $(uname) in
-		"Darwin") cat ${file} | pbzip2 -c -d | split -l 165000 -a 2 - ${outfile}. ;; # split -b splits before the end of the line. Approx. 165K lines per 256M
+		"Darwin") cat ${file} | pbzip2 -c -d | split -l 500000 -a 2 - ${outfile}. ;; # split -b splits before the end of the line
 		"Linux")  cat ${file} | pbzip2 -c -d | split -C 256M   -a 2 - ${outfile}. ;;
 		*) ;;
 	esac
