@@ -1,10 +1,11 @@
-dir="/liberal/db/kecs";
+dir="/liberal/db/reddit";
 
 for file in $@
 do
 	IFS='_-' read -ra parts <<< "$file"
 
 	type=${parts[0]};
+	type=${type:(-2)};
 	year=${parts[1]};
 	leaf=${parts[2]};
 
