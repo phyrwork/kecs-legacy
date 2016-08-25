@@ -14,5 +14,5 @@ do
 		*) echo "Unknown file type. Exiting!"; exit 1 ;;
 	esac
 
-	mv "$file" "$dir/$type/$year/$leaf";
+	test -d "$dir/$type/$year" || mkdir -p "$dir/$type/$year" && mv "$file" "$dir/$type/$year/$leaf";
 done
