@@ -1,3 +1,5 @@
+source ../env.sh;
+
 for file in $@
 do
 
@@ -25,6 +27,6 @@ do
     		($column_spec);"
 
     echo "Importing authors from "${file}"... ";
-    mysql -hkecs-dev --silent kecs <<< $sql;
+    mysql -h$KECS_HOST --silent $KECS_DATABASE <<< $sql;
 
 done

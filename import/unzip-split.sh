@@ -1,3 +1,5 @@
+source ../env.sh;
+
 for file in $@
 do
 

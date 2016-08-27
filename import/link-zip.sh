@@ -1,4 +1,6 @@
-dir="/liberal/db/reddit";
+source ../env.sh;
+
+dir=$KECS_DATA;
 
 for file in $@
 do

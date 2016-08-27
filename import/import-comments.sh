@@ -1,3 +1,5 @@
+source ../env.sh;
+
 for file in $@
 do
 
@@ -49,6 +51,6 @@ do
 		";
 
 	echo "Importing comments from "${file}"... ";
-	mysql -hkecs-dev --silent kecs <<< $sql;
+	mysql -h$KECS_HOST --silent $KECS_DATABASE <<< $sql;
 
 done
