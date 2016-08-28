@@ -9,7 +9,7 @@ shift;
 
 echo "Grouping CSVs into sets of $grpsize...";
 
-head -n 1 $1 > $output;
+
 
 numout=0;
 files=();
@@ -19,7 +19,9 @@ do
 	files+=($file);
 	if [ "${#files[@]}" -ge "$grpsize" ]
 	then
-		parallel --progress --xapply --line-buffer tail -n +2 ::: $files >> "$outdir/${files[0]}}.grp.csv";
+		outfile="$outdir/${${files[0]}##*/}.grp.csv";
+		head -n 1 ${files[0]} > $outfile;
+		parallel --progress --xapply --line-buffer tail -n +2 ::: $files >> $outfile;
 		files=(); # reset file list
 	fi
 done
