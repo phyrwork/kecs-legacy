@@ -19,7 +19,7 @@ do
 	files+=($file);
 	if [ "${#files[@]}" -ge "$grpsize" ]
 	then
-		outfile="$outdir/${${files[0]}##*/}.grp.csv";
+		outfile="$outdir/$(basename ${files[0]})";
 		head -n 1 ${files[0]} > $outfile;
 		parallel --progress --xapply --line-buffer tail -n +2 ::: $files >> $outfile;
 		files=(); # reset file list
