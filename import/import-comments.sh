@@ -26,12 +26,13 @@ do
 
 	sql="	CREATE TEMPORARY TABLE IF NOT EXISTS comment_raw (
 				comment_id bigint(11) unsigned NOT NULL,
-				created_utc bigint(11) unsigned NOT NULL,
+				created_utc int(11) unsigned NOT NULL,
 				link_id bigint(11) unsigned NOT NULL,
 				parent_id bigint(11) unsigned NOT NULL,
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
-				PRIMARY KEY (link_id)
+				PRIMARY KEY (link_id),
+				KEY(author)
 			) ENGINE=MEMORY CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'

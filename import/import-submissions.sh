@@ -24,10 +24,11 @@ do
 
 	sql="	CREATE TEMPORARY TABLE IF NOT EXISTS submission_raw (
 				link_id bigint(11) unsigned NOT NULL,
-				created_utc bigint(11) unsigned NOT NULL,
+				created_utc int(11) unsigned NOT NULL,
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
-				PRIMARY KEY (link_id)
+				PRIMARY KEY (link_id),
+				KEY(author)
 			) ENGINE=MEMORY DEFAULT CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'
