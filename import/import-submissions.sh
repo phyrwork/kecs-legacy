@@ -28,7 +28,7 @@ do
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
 				PRIMARY KEY (link_id)
-			) ENGINE=TokuDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=TOKUDB_SNAPPY;
+			) ENGINE=MEMORY DEFAULT CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'
 			IGNORE INTO TABLE submission_raw
