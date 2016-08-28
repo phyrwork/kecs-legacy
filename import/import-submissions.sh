@@ -27,8 +27,8 @@ do
 				created_utc bigint(11) unsigned NOT NULL,
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
-				PRIMARY KEY (comment_id)
-			) ENGINE=TokuDB DEFAULT CHARSET=utf8mb4;
+				PRIMARY KEY (link_id)
+			) ENGINE=TokuDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=TOKUDB_SNAPPY;
 			
 			LOAD DATA LOCAL INFILE '$file'
 			IGNORE INTO TABLE submission_raw
