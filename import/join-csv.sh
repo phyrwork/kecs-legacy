@@ -8,12 +8,7 @@ echo "Joining CSVs to $output...";
 
 head -n 1 $1 >> $output;
 
-while (( "$#" )); do
-
-	echo "...appending $1";
+parallel --progress --xapply --line-buffer tail -n +2 $1 ::: $@ >> $output;
 	tail -n +2 $1 >> $output;
-	shift
 
-done
-
-echo "Done!";
+echo "..done!";
