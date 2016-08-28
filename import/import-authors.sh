@@ -61,6 +61,6 @@ do
     		($column_spec);"
 
     echo "Importing authors from ${file}... ";
-    mysql -h "$host" --silent "$datbase" <<< $sql;
+    mysql -h "$host" --silent "$database" <<< $sql;
 
 done

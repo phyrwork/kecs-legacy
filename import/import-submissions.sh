@@ -37,7 +37,7 @@ fi
 for file in $@
 do
 
-	sh import-authors.sh $file;
+	sh import-authors.sh -h "$host" -d "$database" $file;
 
 	column_spec=(); 
 
@@ -80,6 +80,6 @@ do
 		";
 
 	echo "Importing submissions from ${file}... ";
-	mysql -h "$host" --silent "$datbase" <<< $sql;
+	mysql -h "$host" --silent "$database" <<< $sql;
 
 done

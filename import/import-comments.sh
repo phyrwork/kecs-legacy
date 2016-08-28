@@ -34,8 +34,6 @@ then
 fi
 
 # import data
-source ../env.sh;
-
 for file in $@
 do
 
@@ -88,6 +86,6 @@ do
 		";
 
 	echo "Importing comments from ${file}... ";
-	mysql -h "$host" --silent "$datbase" <<< $sql;
+	mysql -h "$host" --silent "$database" <<< $sql;
 
 done
