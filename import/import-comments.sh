@@ -1,13 +1,49 @@
+# defaults
+host="";
+database="";
+
+# parse arguments
+while [[ $# -gt 0 ]]
+do
+	key=$1;
+	case $key in
+		-h|--host)
+			shift;
+			host=$1; shift ;;
+
+		-d|--database)
+			shift;
+			database=$1; shift ;;
+
+		*)
+			files=$@; break ;;
+	esac
+done
+
+# validate options
+if [ "$host" == "" ]
+then
+	echo "Error: No host specified. Exiting!";
+	exit -1;
+fi
+
+if [ "$database" == "" ]
+then
+	echo "Error: No host specified. Exiting!";
+	exit -1;
+fi
+
+# import data
 source ../env.sh;
 
 for file in $@
 do
 
-	sh import-authors.sh $file;
+	sh import-authors.sh -h "$host" -d "$database" $file;
 
 	column_spec=(); 
 
-	columns=$(cat $file | sed -n 1'p' | tr ',' '\n')
+	columns=$(cat $file | head -n 1 | tr ',' '\n')
 
 	for column in $columns
 	do
@@ -51,7 +87,7 @@ do
 			FROM comment_raw AS c INNER JOIN author AS a ON c.author = a.username;
 		";
 
-	echo "Importing comments from "${file}"... ";
-	mysql -h$KECS_HOST --silent $KECS_DATABASE <<< $sql;
+	echo "Importing comments from ${file}... ";
+	mysql -h "$host" --silent "$datbase" <<< $sql;
 
 done
