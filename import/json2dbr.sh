@@ -35,7 +35,7 @@ do
 			output=$1; shift ;;
 
 		*)
-			files=$@; break ;;
+			break ;;
 	esac
 done
 
@@ -53,4 +53,4 @@ then
 fi
 
 # parse json and output csvs
-cat "${files:-/dev/stdin}" | ./json2csv.sh -l "$lines" -o "$output" -k "$fields";
+cat "${@:-/dev/stdin}" | ./json2csv.sh -l "$lines" -o "$output" -k "$fields";

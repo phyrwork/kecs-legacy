@@ -21,7 +21,7 @@ do
 			output=$1; shift ;;
 
 		*)
-			files=$@; break ;;
+			break ;;
 	esac
 done
 
@@ -41,7 +41,7 @@ fi
 # parse json and output csvs
 if [ "$lines" -gt "0" ]
 then
-	cat "${files:-/dev/stdin}" | json2csv -k "$fields" -p | parallel --header : --pipe -N "$lines" "cat > ${output}.{#}.csv";
+	cat "${@:-/dev/stdin}" | json2csv -k "$fields" -p | parallel --header : --pipe -N "$lines" "cat > ${output}.{#}.csv";
 else
-	cat "${files:-/dev/stdin}" | json2csv -k "$fields" -p > "$output.csv";
+	cat "${@:-/dev/stdin}" | json2csv -k "$fields" -p > "$output.csv";
 fi
