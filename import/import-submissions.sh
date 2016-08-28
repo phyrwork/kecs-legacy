@@ -45,6 +45,6 @@ do
 		";
 
 	echo "Importing submissions from "${file}"... ";
-	mysql --h$KECS_HOST --silent $KECS_DATABASE <<< $sql;
+	mysql -h$KECS_HOST --silent $KECS_DATABASE <<< $sql;
 
 done
