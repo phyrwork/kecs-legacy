@@ -66,7 +66,7 @@ do
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
 				PRIMARY KEY (link_id),
-				KEY(author)
+				KEY(author) USING BTREE
 			) ENGINE=MEMORY CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'
