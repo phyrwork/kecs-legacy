@@ -61,7 +61,8 @@ do
 				created_utc int(11) unsigned NOT NULL,
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
-				PRIMARY KEY (link_id)
+				PRIMARY KEY (link_id),
+				KEY (author) USING BTREE
 			) ENGINE=MEMORY DEFAULT CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'
@@ -72,9 +73,6 @@ do
 			($column_spec)
 			SET
 				link_id = CONV(@link_id,36,10);
-
-			ALTER TABLE submission_raw
-			ADD INDEX ix_author(author);
 
 			INSERT INTO submission(link_id,created_utc,author_id,score)
 			SELECT s.link_id,s.created_utc,a.author_id AS author_id,s.score
