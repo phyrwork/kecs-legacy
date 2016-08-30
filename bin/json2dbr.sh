@@ -53,4 +53,4 @@ then
 fi
 
 # parse json and output csvs
-cat "${@:-/dev/stdin}" | ./json2csv.sh -l "$lines" -o "$output" -k "$fields";
+cat "${@:-/dev/stdin}" | kecs.json2csv -l "$lines" -o "$output" -k "$fields";

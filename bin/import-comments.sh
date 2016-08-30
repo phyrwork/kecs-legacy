@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # defaults
 host="";
 database="";
@@ -37,7 +39,7 @@ fi
 for file in $@
 do
 
-	sh import-authors.sh -h "$host" -d "$database" $file;
+	kecs.import-authors -h "$host" -d "$database" $file;
 
 	column_spec=(); 
 
@@ -46,7 +48,9 @@ do
 	for column in $columns
 	do
 		case $column in
-			"id") column="@link_id" ;;
+			"id") column="@comment_id" ;;
+			"link_id") column="@link_id" ;;
+			"parent_id") column="@parent_id" ;;
 			*) column=$column ;;
 		esac
 
@@ -56,30 +60,34 @@ do
 
 	column_spec=$(IFS=,; echo "${column_spec[*]}");
 
-	sql="	CREATE TEMPORARY TABLE IF NOT EXISTS submission_raw (
-				link_id bigint(11) unsigned NOT NULL,
+	sql="	CREATE TEMPORARY TABLE IF NOT EXISTS comment_raw (
+				comment_id bigint(11) unsigned NOT NULL,
 				created_utc int(11) unsigned NOT NULL,
+				link_id bigint(11) unsigned NOT NULL,
+				parent_id bigint(11) unsigned NOT NULL,
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
 				PRIMARY KEY (link_id),
-				KEY (author) USING BTREE
-			) ENGINE=MEMORY DEFAULT CHARSET=utf8mb4;
+				KEY(author) USING BTREE
+			) ENGINE=MEMORY CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'
-			IGNORE INTO TABLE submission_raw
+			IGNORE INTO TABLE comment_raw
 			FIELDS TERMINATED BY ',' ENCLOSED BY '\"' ESCAPED BY '\"'
 			LINES TERMINATED BY '\\n'
 			IGNORE 1 LINES
 			($column_spec)
 			SET
-				link_id = CONV(@link_id,36,10);
+				comment_id = CONV(@comment_id,36,10),
+				link_id = CONV(SUBSTRING(@link_id FROM 4),36,10),
+				parent_id = CONV(SUBSTRING(@parent_id FROM 4),36,10);
 
-			INSERT INTO submission(link_id,created_utc,author_id,score)
-			SELECT s.link_id,s.created_utc,a.author_id AS author_id,s.score
-			FROM submission_raw AS s INNER JOIN author AS a ON s.author = a.username;
+			INSERT INTO comment(comment_id,created_utc,link_id,parent_id,author_id,score)
+			SELECT c.comment_id,c.created_utc,c.link_id,c.parent_id,a.author_id AS author_id,c.score
+			FROM comment_raw AS c INNER JOIN author AS a ON c.author = a.username;
 		";
 
-	echo "Importing submissions from ${file}... ";
+	echo "Importing comments from ${file}... ";
 	mysql -h "$host" --silent "$database" <<< $sql;
 
 done
