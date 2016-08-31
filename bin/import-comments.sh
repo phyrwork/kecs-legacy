@@ -38,9 +38,6 @@ fi
 # import data
 for file in $@
 do
-
-	kecs.import-authors -h "$host" -d "$database" $file;
-
 	column_spec=(); 
 
 	columns=$(cat $file | head -n 1 | tr ',' '\n')
@@ -67,8 +64,7 @@ do
 				parent_id bigint(11) unsigned NOT NULL,
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
-				PRIMARY KEY (comment_id),
-				KEY(author) USING BTREE
+				PRIMARY KEY (comment_id)
 			) ENGINE=MEMORY DEFAULT CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'
@@ -81,6 +77,13 @@ do
 				comment_id = CONV(@comment_id,36,10),
 				link_id = CONV(SUBSTRING(@link_id FROM 4),36,10),
 				parent_id = CONV(SUBSTRING(@parent_id FROM 4),36,10);
+
+			ALTER TABLE comment_raw
+			ADD INDEX ix_author(author) USING BTREE;
+
+			INSERT IGNORE INTO author(username)
+			SELECT c.author
+			FROM comment_raw AS c;
 
 			INSERT INTO comment(comment_id,created_utc,link_id,parent_id,author_id,score)
 			SELECT c.comment_id,c.created_utc,c.link_id,c.parent_id,a.author_id AS author_id,c.score
