@@ -67,9 +67,9 @@ do
 				parent_id bigint(11) unsigned NOT NULL,
 				author char(20) NOT NULL,
 				score int(11) NOT NULL,
-				PRIMARY KEY (link_id),
+				PRIMARY KEY (comment_id),
 				KEY(author) USING BTREE
-			) ENGINE=MEMORY CHARSET=utf8mb4;
+			) ENGINE=MEMORY DEFAULT CHARSET=utf8mb4;
 			
 			LOAD DATA LOCAL INFILE '$file'
 			IGNORE INTO TABLE comment_raw
