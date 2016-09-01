@@ -16,6 +16,7 @@ ln -sf $(pwd)/bin/sort-zip.sh $dir/kecs.sort-zip
 ln -sf $(pwd)/bin/import-comments.sh $dir/kecs.import-comments
 ln -sf $(pwd)/bin/import-submissions.sh $dir/kecs.import-submissions
 ln -sf $(pwd)/bin/link-zip.sh $dir/kecs.link-zip
+ln -sf $(pwd)/bin/import.sh $dir/kecs.import
 
 ln -sf $(pwd)/bin/kecs.sh $dir/kecs
 ln -sf $(pwd)/bin/pkecs.sh $dir/pkecs
