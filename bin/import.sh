@@ -6,6 +6,7 @@ database="";
 snapdata="";
 snapfreq=0;
 mode="";
+logfile="";
 
 # parse arguments
 while [[ $# -gt 0 ]]
@@ -81,6 +82,11 @@ fi
 snapnum=0;
 for file in $@
 do
+	if [ "$logfile" != "" ]
+	then
+		echo "Importing $file..." >> $logfile;
+	fi
+
 	# import file
 	case $mode in
 		author)
@@ -103,8 +109,14 @@ do
 	then
 		if [ "$snapnum" -ge "$snapfreq" ]
 		then
-			service mysql stop;
 			snapname = $(echo basename $file) | sed -e 's/[^A-Za-z0-9._-]/_/g');
+
+			if [ "$logfile" != "" ]
+			then
+				echo "Taking snapshot $snapname..." >> $logfile;
+			fi
+			
+			service mysql stop;
 			zfs snapshot "${snapdata}@${snapname}";
 			service mysql start;
 
