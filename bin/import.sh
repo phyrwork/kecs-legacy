@@ -82,9 +82,10 @@ fi
 snapnum=0;
 for file in $@
 do
+	log="Importing $file...";
 	if [ "$logfile" != "" ]
 	then
-		echo "Importing $file..." >> $logfile;
+		echo "$log" >> $logfile;
 	fi
 
 	# import file
@@ -104,16 +105,17 @@ do
 	esac
 
 	# snapshots
-	snapnum+=1;
+	snapnum=$((snapnum+1));
 	if [ "$snapfreq" -gt "0" ]
 	then
 		if [ "$snapnum" -ge "$snapfreq" ]
 		then
 			snapname=$(echo $(basename $file) | sed -e 's/[^A-Za-z0-9._-]/_/g');
 
+			log="Taking snapshot $snapname...";
 			if [ "$logfile" != "" ]
 			then
-				echo "Taking snapshot $snapname..." >> $logfile;
+				echo "$log" >> $logfile;
 			fi
 			
 			service mysql stop;
