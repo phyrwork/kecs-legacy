@@ -13,6 +13,11 @@ while [[ $# -gt 0 ]]
 do
 	key=$1;
 	case $key in
+		-v|--version)
+			shift;
+			echo "v0.1";
+			exit 0 ;;
+
 		-h|--host)
 			shift;
 			host=$1; shift ;;
@@ -42,19 +47,19 @@ done
 if [ "$host" == "" ]
 then
 	echo "Error: No host specified. Exiting!";
-	exit -1;
+	exit 0;
 fi
 
 if [ "$database" == "" ]
 then
 	echo "Error: No host specified. Exiting!";
-	exit -1;
+	exit 0;
 fi
 
 if [ "$author" == "" ]
 then
 	echo "Error: No author specified. Exiting!";
-	exit -1;
+	exit 0;
 fi
 
 # prepare
@@ -69,3 +74,4 @@ sql="CALL kecs('$author',$time_start,$time_end)";
 
 # execute
 mysql $opts <<< $sql;
+exit 0;
