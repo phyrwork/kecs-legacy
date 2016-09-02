@@ -4,16 +4,37 @@ classdef Result < handle
     
     properties
         data; % table
-        time_start;
-        time_end;
+        struct('start',datetime.empty,'finish',datetime.empty);
     end
     
     methods
-        function obj = Result(path)
-            % import data
-            ds = datastore(path,'ReadVariableNames',true'); % file to datastore
-            ds.SelectedFormats = cellfun(@(x)strrep(x,'%f','%u'),ds.SelectedFormats,'UniformOutput',false); % input data as integers
-            obj.data = ds.readall;
+        function obj = Result(data,varargin)
+            
+            switch class(data)
+                case 'table'
+                    % use table
+                    T = data;
+                    
+                case 'char'
+                    % load file
+                    ds = datastore(path,'ReadVariableNames',true'); % file to datastore
+                    ds.SelectedFormats = cellfun(@(x)strrep(x,'%f','%u'),ds.SelectedFormats,'UniformOutput',false); % input data as integers
+                    T = ds.readall;
+                    
+                otherwise
+                    error('Data not supported. Supported data types: file path, table)');
+            end
+            
+            % attach to object
+            obj.data = T;
+            
+            % initialize times if present
+            if nargin > 2
+                obj.time.start = varargin{1};
+            end
+            if nargin > 3
+                obj.time.finish = varargin{2};
+            end
         end
         
         function len = length(obj)
