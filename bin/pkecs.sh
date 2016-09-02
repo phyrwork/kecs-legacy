@@ -5,6 +5,9 @@ host="";
 database="";
 time_start=0;
 time_end=2147483647;
+header=false;
+mode="array";
+authors="";
 
 # parse arguments
 while [[ $# -gt 0 ]]
@@ -31,8 +34,13 @@ do
 			shift;
 			header=true ;;
 
+		-f|--file)
+			shift;
+			mode="file" ;;
+
 		*)
-			author_file=$1; break ;;
+			authors=$@;
+			break ;;
 	esac
 done
 
@@ -45,13 +53,18 @@ fi
 
 if [ "$database" == "" ]
 then
-	echo "Error: No host specified. Exiting!";
+	echo "Error: No database specified. Exiting!";
 	exit -1;
 fi
 
-if [ "$author_file" == "" ]
+if [ "$authors" == "" ]
 then
-	echo "Error: No authors file specified. Exiting!";
+	case $mode in
+		file)
+			echo "Error: No authors file specified. Exiting!" ;;
+		array)
+			echo "Error: No authors specified. Exiting!" ;;
+	esac
 	exit -1;
 fi
 
@@ -60,4 +73,9 @@ if [ $header = true ]
 then
 	echo "username\tscore\tcount\tscore_self\tcount_self";
 fi
-parallel -N4 --linebuffer --progress --xapply -j16 kecs -h {1} -d {2} -a {3} -b {4} {5} ::: "$host" ::: "$database" ::: "$time_start" ::: "$time_end" :::: "$author_file" ;
+case $mode in
+	file)
+		parallel --linebuffer --progress -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" :::: "$1" ;;
+	array)
+		parallel --linebuffer --progress -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" ::: $authors ;;
+esac
