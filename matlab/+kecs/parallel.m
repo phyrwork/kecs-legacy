@@ -1,24 +1,40 @@
-function T = serial( host,database,authors,time_start,time_end )
+function T = parallel( host,database,authors,varargin )
 %KECS Call KECS procedure
 
-    % defaults
-    if nargin < 4
-        time_start = 0;
-    end
+    % validators
+    islogicalchar = @(x) ischar(x) || islogical(x);
+    iscellchar = @(x) ischar(x) || iscell(x);
     
-    if nargin < 5
-        time_end = 2147483647;
-    end
+    % arguments
+    p = inputParser;
+    p.addRequired('Host',@ischar);
+    p.addRequired('Database',@ischar);
+    p.addRequired('Authors',iscellchar);
+    p.addParameter('After',0,@isdatetime);
+    p.addParameter('Before',2147483647,@isdatetime);
+    p.addParameter('ShowHeader',true,@islogical);
+    p.addParameter('OutputFile',false,islogicalchar);
+    p.parse(host,database,authors,varargin{:});
     
     % build command
+    function authors = iif_authors(authors)
+        if ischar(authors)
+            authors = authors;
+        elseif iscell(authors)
+            authors = sprintf('%s ',authors{:});
+        end
+    end
+    
     cmd = sprintf('%s ',...
         'pkecs',...
-        '-h',host,...
-        '-d',database,...
-        '-a',num2str(time_start),...
-        '-b',num2str(time_end),...
-        '-k',...
-        sprintf('%s ',authors{:})...
+        '-h',p.Results.Host,...
+        '-d',p.Results.Database,...
+        '-a',num2str(p.Results.After),...
+        '-b',num2str(p.Results.Before),...
+        iif(p.Results.ShowHeader,'-k',char.empty),...
+        iif(ischar(p.Results.OutputFile),'-o',char.empty),iif(ischar(p.Results.OutputFile),p.Results.Authors,char.empty),...
+        iif(ischar(p.Results.Authors),'-f',char.empty),...
+        iif_authors(p.Results.Authors)...
     );
     
     % execute

@@ -35,7 +35,7 @@ do
 			shift;
 			header=true ;;
 
-		-i|--input)
+		-f|--input)
 			shift;
 			mode="file" ;;
 
