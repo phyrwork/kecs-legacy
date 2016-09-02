@@ -71,11 +71,11 @@ fi
 # execute
 if [ $header = true ]
 then
-	echo "username\tscore\tcount\tscore_self\tcount_self";
+	echo "username	score	count	score_self	count_self";
 fi
 case $mode in
 	file)
-		parallel --linebuffer --progress -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" :::: "$1" ;;
+		parallel --linebuffer -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" :::: "$1" ;;
 	array)
-		parallel --linebuffer --progress -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" ::: $authors ;;
+		parallel --linebuffer -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" ::: $authors ;;
 esac
