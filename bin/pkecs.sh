@@ -8,6 +8,7 @@ time_end=2147483647;
 header=false;
 mode="array";
 authors="";
+output_file="";
 
 # parse arguments
 while [[ $# -gt 0 ]]
@@ -34,12 +35,15 @@ do
 			shift;
 			header=true ;;
 
-		-f|--file)
+		-i|--input)
 			shift;
 			mode="file" ;;
 
+		-o|--output)
+			shift;
+			output_file=$1; shift ;;
+
 		*)
-			authors=$@;
 			break ;;
 	esac
 done
@@ -57,6 +61,16 @@ then
 	exit -1;
 fi
 
+# prepare
+case $mode in
+	file)
+		authors=$1;
+		argsep="::::" ;;
+	array)
+		authors=$@;
+		argsep=":::" ;;
+esac
+
 if [ "$authors" == "" ]
 then
 	case $mode in
@@ -73,9 +87,9 @@ if [ $header = true ]
 then
 	echo "username	score	count	score_self	count_self";
 fi
-case $mode in
-	file)
-		parallel --linebuffer -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" :::: "$1" ;;
-	array)
-		parallel --linebuffer -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" ::: $authors ;;
-esac
+if [ "$output_file" != "" ]
+then
+	parallel --linebuffer -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" "$argsep" $authors | tee "$output_file" ;
+else
+	parallel --linebuffer -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" "$argsep" $authors ;
+fi
