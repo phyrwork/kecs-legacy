@@ -3,6 +3,7 @@
 # defaults
 host="";
 database="";
+search_after=0;
 time_start=0;
 time_end=2147483647;
 header=false;
@@ -22,6 +23,10 @@ do
 		-d|--database)
 			shift;
 			database=$1; shift ;;
+
+		-s|--search-after)
+			shift;
+			search_start=$1; shift ;;
 
 		-a|--after)
 			shift;
@@ -89,7 +94,7 @@ then
 fi
 if [ "$output_file" != "" ]
 then
-	parallel --linebuffer -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" "$argsep" $authors | tee "$output_file" ;
+	parallel --linebuffer -j16 kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors | tee "$output_file" ;
 else
-	parallel --linebuffer -j16 kecs -h "$host" -d "$database" -a "$time_start" -b "$time_end" "$argsep" $authors ;
+	parallel --linebuffer -j16 kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors ;
 fi

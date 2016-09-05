@@ -10,10 +10,17 @@ function T = parallel( host,database,authors,varargin )
     p.addRequired('Host',@ischar);
     p.addRequired('Database',@ischar);
     p.addRequired('Authors',iscellchar);
-    p.addParameter('After',0,@isdatetime);
-    p.addParameter('Before',2147483647,@isdatetime);
+    p.addParameter('DescendantsAfter',datetime.empty,@isdatetime);
+    p.addParameter('After',datetime(2000,01,01),@isdatetime);
+    p.addParameter('Before',datetime(2030,01,01),@isdatetime);
     p.addParameter('OutputFile',false,islogicalchar);
     p.parse(host,database,authors,varargin{:});
+    
+    % defaults
+    desc_after = p.Results.DescendantsAfter;
+    if isempty(desc_after)
+        desc_after = p.Results.After - calmonths(6) - caldays(1);
+    end
     
     % build command
     function authors = iif_authors(authors)
@@ -28,6 +35,7 @@ function T = parallel( host,database,authors,varargin )
         'pkecs',...
         '-h',p.Results.Host,...
         '-d',p.Results.Database,...
+        '-s',num2str(posixtime(p.Results.DescendantsAfter),...
         '-a',num2str(posixtime(p.Results.After)),...
         '-b',num2str(posixtime(p.Results.Before)),...
         '-k',...

@@ -1,12 +1,16 @@
-function T = serial( host,database,author,time_start,time_end )
+function T = serial( host,database,author,search_after,time_start,time_end )
 %KECS Call KECS procedure
 
     % defaults
     if nargin < 4
-        time_start = 0;
+        search_after = 0;
     end
     
     if nargin < 5
+        time_start = 0;
+    end
+    
+    if nargin < 6
         time_end = 2147483647;
     end
     
@@ -15,6 +19,7 @@ function T = serial( host,database,author,time_start,time_end )
         'kecs',...
         '-h',host,...
         '-d',database,...
+        '-s',num2str(search_after),...
         '-a',num2str(time_start),...
         '-b',num2str(time_end),...
         '-k',...

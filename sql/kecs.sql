@@ -5,6 +5,7 @@ DROP PROCEDURE IF EXISTS kecs;
 CREATE PROCEDURE kecs
 (
 	IN username_ CHAR(20) CHARACTER SET ascii,
+	IN ts INT UNSIGNED,
 	IN t1 INT UNSIGNED,
 	IN t2 INT UNSIGNED
 )
@@ -17,6 +18,7 @@ BEGIN
 
 	-- rename our input variable to avoid namespace collisions
 	SET @author = username_;
+	SET @ts = ts;
 	SET @t1 = t1;
 	SET @t2 = t2;
 
@@ -63,7 +65,8 @@ BEGIN
 		INNER JOIN submission su
 		ON co.link_id = su.link_id
 		WHERE co.author_id = @author_id
-		AND su.author_id != @author_id'
+		AND su.author_id != @author_id
+		AND co.created_utc BETWEEN @ts AND @t2'
 	);
 	PREPARE insert_next FROM @sql;
 	EXECUTE insert_next;
@@ -80,7 +83,8 @@ BEGIN
 		FROM comment co
 		INNER JOIN ',@comment_recu,' de
 		ON  co.parent_id = de.comment_id
-		WHERE de.depth = ?'
+		WHERE de.depth = ?
+		AND co.created_utc BETWEEN @ts AND @t2'
 	);
 	PREPARE insert_next FROM @sql;
 
@@ -123,8 +127,7 @@ BEGIN
 		   		su.score AS score
 		   	FROM submission su
 			WHERE su.author_id = @author_id
-			AND su.created_utc >= @t1
-			AND su.created_utc < @t2
+			AND su.created_utc BETWEEN @t1 AND @t2
 			
 			UNION ALL
 		   
@@ -136,8 +139,7 @@ BEGIN
 			INNER JOIN submission su
 			ON co.link_id = su.link_id
 			WHERE su.author_id = @author_id
-			AND co.created_utc >= @t1
-			AND co.created_utc < @t2
+			AND co.created_utc >= BETWEEN @t1 AND @t2
 
 			UNION ALL
 		   ' -- comments in descendant search list in time period
@@ -147,8 +149,7 @@ BEGIN
 			FROM comment co
 			INNER JOIN ',@comment_recu,' de
 			ON co.comment_id = de.comment_id
-			WHERE co.created_utc >= @t1
-			AND co.created_utc < @t2
+			WHERE co.created_utc >= BETWEEN @t1 AND @t2
 			
 		) a'
 	);

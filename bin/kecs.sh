@@ -3,6 +3,7 @@
 # defaults
 host="";
 database="";
+search_start=0;
 time_start=0;
 time_end=2147483647;
 header=false;
@@ -25,6 +26,10 @@ do
 		-d|--database)
 			shift;
 			database=$1; shift ;;
+
+		-s|--search-after)
+			shift;
+			search_start=$1; shift ;;
 
 		-a|--after)
 			shift;
@@ -70,7 +75,7 @@ then
 fi
 opts+=" $database";
 
-sql="CALL kecs('$author',$time_start,$time_end)";
+sql="CALL kecs('$author',$search_start,$time_start,$time_end)";
 
 # execute
 mysql $opts <<< $sql;
