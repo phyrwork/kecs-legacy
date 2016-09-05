@@ -139,7 +139,7 @@ BEGIN
 			INNER JOIN submission su
 			ON co.link_id = su.link_id
 			WHERE su.author_id = @author_id
-			AND co.created_utc >= BETWEEN @t1 AND @t2
+			AND co.created_utc BETWEEN @t1 AND @t2
 
 			UNION ALL
 		   ' -- comments in descendant search list in time period
@@ -149,7 +149,7 @@ BEGIN
 			FROM comment co
 			INNER JOIN ',@comment_recu,' de
 			ON co.comment_id = de.comment_id
-			WHERE co.created_utc >= BETWEEN @t1 AND @t2
+			WHERE co.created_utc BETWEEN @t1 AND @t2
 			
 		) a'
 	);
