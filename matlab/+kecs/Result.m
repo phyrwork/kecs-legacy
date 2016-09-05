@@ -4,7 +4,7 @@ classdef Result < handle
     
     properties
         data; % table
-        struct('start',datetime.empty,'finish',datetime.empty);
+        time = struct('start',datetime.empty,'finish',datetime.empty);
     end
     
     methods

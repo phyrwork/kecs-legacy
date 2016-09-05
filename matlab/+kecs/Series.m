@@ -1,4 +1,4 @@
-classdef ResultSeries < handle
+classdef Series < handle
     %RESULTSERIES
     
     properties
@@ -6,7 +6,7 @@ classdef ResultSeries < handle
     end
     
     methods
-        function obj = ResultSeries(result)
+        function obj = Series(result)
             if size(result,1) > size(result,2)
                 obj.result = result';
             else
