@@ -17,9 +17,9 @@ function T = parallel( host,database,authors,varargin )
     p.parse(host,database,authors,varargin{:});
     
     % defaults
-    desc_after = p.Results.DescendantsAfter
+    desc_after = p.Results.DescendantsAfter;
     if isempty(desc_after)
-        desc_after = p.Results.After - calmonths(6) - caldays(1)
+        desc_after = p.Results.After - calmonths(6) - caldays(1);
     end
     
     % build command
