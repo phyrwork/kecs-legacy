@@ -46,12 +46,9 @@ done
 sql="
 	SELECT a.username FROM
 	(
-		SELECT DISTINCT author_id FROM
-		(
-			SELECT author_id,created_utc FROM comment
-			UNION SELECT author_id,created_utc FROM submission
-		) q
-		WHERE created_utc BETWEEN $after AND $before
+		SELECT author_id FROM comment WHERE created_utc BETWEEN $after AND $before
+		UNION DISTINCT
+		SELECT author_id FROM submission WHERE created_utc BETWEEN $after AND $before
 	) p
 	INNER JOIN author a ON a.author_id = p.author_id;
 ";
