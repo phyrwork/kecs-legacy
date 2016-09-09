@@ -1,6 +1,6 @@
 # defaults
-host="";
-database="";
+host="127.0.0.1";
+database="kecs";
 
 # parse arguments
 while [[ $# -gt 0 ]]

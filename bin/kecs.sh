@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # defaults
-host="";
-database="";
+host="127.0.0.1";
+database="kecs";
 search_start=0;
 time_start=0;
 time_end=2147483647;
