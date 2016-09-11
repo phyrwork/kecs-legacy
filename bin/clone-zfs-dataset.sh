@@ -30,9 +30,11 @@ then
 fi
 
 # clone
-for subject in $subjects
+for target in $@
 do
-	for target in $@
+	zfs create "$base$target" ;
+
+	for subject in $subjects
 	do
 		zfs clone "$subject@$snapshot" "$base$target/$(basename $subject)" ;
 	done
