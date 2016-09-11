@@ -22,18 +22,18 @@ done
 subjects=$1; shift;
 subjects=$(zfs list -o name -r $subjects | tail -n +3);
 
-snapshot=$2; shift;
+snapshot=$1; shift;
 
 if [ "$base" != "" ]
-	base="/$base";
 then
-
+	base="$base/";
+fi
 
 # clone
 for subject in $subjects
 do
-	for target in $targets
+	for target in $@
 	do
-		zfs clone "$subject@$snapshot" "$base$target" ;
+		zfs clone "$subject@$snapshot" "$base$target/$(basename $subject)" ;
 	done
 done
