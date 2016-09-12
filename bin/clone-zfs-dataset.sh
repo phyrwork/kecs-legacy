@@ -30,6 +30,8 @@ fi
 # clone
 for target in $@
 do
+	zfs destroy -Rr "$base$target" ;
+
 	zfs create "$base$target" ;
 
 	zfs clone "$subject/data@$snapshot" "$base$target/data" ;
