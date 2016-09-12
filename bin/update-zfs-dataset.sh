@@ -2,6 +2,7 @@
 
 # defaults
 base="";
+basecmd="";
 
 # parse arguments
 while [[ $# -gt 0 ]]
@@ -25,14 +26,13 @@ snapshot=$1; shift;
 if [ "$base" != "" ]
 then
 	base="$base/";
+	basecmd = "-b $base";
 fi
 
 # clone
 for target in $@
 do
-	zfs create "$base$target" ;
+	zfs destroy "$base$target" ;
 
-	zfs clone "$subject/data@$snapshot" "$base$target/data" ;
-	zfs clone "$subject/log@$snapshot" "$base$target/log" ;
-	zfs clone "$subject/tmp@$snapshot" "$base$target/tmp" ;
+	kecs.clone-zfs-dataset "$basecmd" "$subject" "$snapshot" "$target" ;
 done
