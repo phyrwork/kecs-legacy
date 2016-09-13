@@ -27,6 +27,8 @@ then
 	base="$base/";
 fi
 
+service nfs-kernel-server stop ;
+
 # clone
 for target in $@
 do
@@ -38,3 +40,5 @@ do
 	zfs clone "$subject/log@$snapshot" "$base$target/log" ;
 	zfs clone "$subject/tmp@$snapshot" "$base$target/tmp" ;
 done
+
+service nfs-kernel-server start ;
