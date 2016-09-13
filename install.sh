@@ -25,5 +25,9 @@ ln -sf $(pwd)/bin/get-authors.sh $dir/kecs.get-authors
 ln -sf $(pwd)/bin/clone-zfs-dataset.sh $dir/kecs.clone-zfs-dataset
 ln -sf $(pwd)/bin/update-zfs-dataset.sh $dir/kecs.update-zfs-dataset
 
+ln -sf $(pwd)/bin/unmount-nfs-dataset.sh $dir/kecs.unmount-nfs-dataset
+ln -sf $(pwd)/bin/mount-nfs-dataset.sh $dir/kecs.mount-nfs-dataset
+ln -sf $(pwd)/bin/remount-nfs-dataset.sh $dir/kecs.remount-nfs-dataset
+
 ln -sf $(pwd)/bin/kecs.sh $dir/kecs
 ln -sf $(pwd)/bin/pkecs.sh $dir/pkecs
