@@ -50,8 +50,12 @@ function T = parallel( host,database,authors,varargin )
     [~,output] = unix(cmd);
     
     % parse results
-    [columns,pos] = textscan(output,'%s\t%s\t%s\t%s\t%s',1);
-    data = textscan(output(pos+1:end),'%s\t%u\t%u\t%u\t%u');
-    T = table(data{:},'VariableNames',[columns{:}]);
+    try
+        [columns,pos] = textscan(output,'%s\t%s\t%s\t%s\t%s',1);
+        data = textscan(output(pos+1:end),'%s\t%u\t%u\t%u\t%u');
+        T = table(data{:},'VariableNames',[columns{:}]);
+    catch
+        error(output);
+    end
 end
 
