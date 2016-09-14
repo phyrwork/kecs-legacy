@@ -56,7 +56,7 @@ do
 
 		-p|--progress)
 			shift;
-			progress="--eta";
+			progress="--eta" ;;
 
 		*)
 			break ;;
