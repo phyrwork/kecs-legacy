@@ -11,6 +11,7 @@ num_cpu=4;
 mode="array";
 authors="";
 output_file="";
+progress="";
 
 # parse arguments
 while [[ $# -gt 0 ]]
@@ -52,6 +53,10 @@ do
 		-o|--output)
 			shift;
 			output_file=$1; shift ;;
+
+		-p|--progress)
+			shift;
+			progress="--eta";
 
 		*)
 			break ;;
@@ -99,7 +104,7 @@ then
 fi
 if [ "$output_file" != "" ]
 then
-	parallel --linebuffer -j"$num_cpu" kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors | tee "$output_file" ;
+	parallel "$progress" --linebuffer -j "$num_cpu" kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors | tee "$output_file" ;
 else
-	parallel --linebuffer -j"$num_cpu" kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors ;
+	parallel "$progress" --linebuffer -j "$num_cpu" kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors ;
 fi

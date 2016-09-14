@@ -15,6 +15,7 @@ function T = parallel( host,database,authors,varargin )
     p.addParameter('Before',datetime(2030,01,01),@isdatetime);
     p.addParameter('OutputFile',false,islogicalchar);
     p.addParameter('Cpu',8,@isnumeric);
+    p.addParameter('DryRun',false,@islogical);
     p.parse(host,database,authors,varargin{:});
     
     % defaults
@@ -41,12 +42,16 @@ function T = parallel( host,database,authors,varargin )
         '-a',num2str(posixtime(p.Results.After)),...
         '-b',num2str(posixtime(p.Results.Before)),...
         '-k',...
-        iif(ischar(p.Results.OutputFile),'-o',char.empty),iif(ischar(p.Results.OutputFile),p.Results.Authors,char.empty),...
+        iif(ischar(p.Results.OutputFile),'-o',char.empty),iif(ischar(p.Results.OutputFile),p.Results.OutputFile,char.empty),...
         iif(ischar(p.Results.Authors),'-f',char.empty),...
         iif_authors(p.Results.Authors)...
     );
     
     % execute
+    if p.Results.DryRun
+        disp(cmd);
+        return;
+    end
     [~,output] = unix(cmd);
     
     % parse results
