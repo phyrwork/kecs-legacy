@@ -104,7 +104,7 @@ then
 fi
 if [ "$output_file" != "" ]
 then
-	parallel "$progress" --linebuffer -j "$num_cpu" kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors | tee "$output_file" ;
+	parallel --linebuffer -j"$num_cpu" kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors | tee "$output_file" ;
 else
-	parallel "$progress" --linebuffer -j "$num_cpu" kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors ;
+	parallel --linebuffer -j"$num_cpu" kecs -h "$host" -d "$database" -s "$search_after" -a "$time_start" -b "$time_end" "$argsep" $authors ;
 fi
