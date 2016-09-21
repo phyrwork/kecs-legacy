@@ -4,7 +4,10 @@ classdef Result < handle
     
     properties
         data; % table
-        time = struct('start',datetime.empty,'finish',datetime.empty);
+        time = struct(...
+            'result', struct('start',datetime.empty,'finish',datetime.empty),...
+            'search', struct('start',datetime.empty)...
+        );
     end
     
     methods
@@ -17,8 +20,9 @@ classdef Result < handle
                     
                 case 'char'
                     % load file
+                    path = data;
                     ds = datastore(path,'ReadVariableNames',true'); % file to datastore
-                    ds.SelectedFormats = cellfun(@(x)strrep(x,'%f','%u'),ds.SelectedFormats,'UniformOutput',false); % input data as integers
+                    ds.SelectedFormats = cellfun(@(x)strrep(x,'%f','%d'),ds.SelectedFormats,'UniformOutput',false); % input data as integers
                     T = ds.readall;
                     
                 otherwise
