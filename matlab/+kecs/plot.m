@@ -37,21 +37,36 @@ function plot(R,NumXBins,NumYBins)
         % ln(Htop) = Cn*HDiv
 
     % Plot
-    scatter(1:N,Score,1.5,C(Yc,:),'.')
+    scatter(1:N,Score,1,C(Yc,:),'.');
     
     hold on
     plot(1:N,ScoreSelf,'r','LineWidth',1.5);
     
     % Label
-    set(gca, 'CLim', [0, 64]);
-    L = 10.^(1:floor(HMax)); % tick marks - powers of 10 up to below max
-    l = ceil(log10(L+1)/HDiv) - 1; % tick index
-    
     Cb = colorbar;
     Cb.Label.String = 'Users per bin';
+    set(gca, 'CLim', [0, 64]);
+    L = [0,10.^(1:floor(HMax))]; % tick marks - powers of 10 up to below max
+    l = ceil(log10(L+1)/HDiv); % tick index
     set(Cb,'YTick',l,'YTicklabel',L);
     
-    xlabel('Users - ranked by karma')
-    ylabel('Karma (log10)')
+    ylabel('Karma');
+    Lm = -10.^-(ceil(YBinMin):-1);
+    Lp = 10.^(1:floor(YBinMax));
+    L = [Lm,0,Lp];
+    l = abslog10(L);
+    set(gca,'YTick',l,'YTickLabel',L);
+    ylim([min([Score;ScoreSelf])-0.25,max([Score;ScoreSelf])+0.25]);
+    
+    xlabel('User rank (by self karma)');
+    l = 0:1000000:N;
+    l = [1,l(2:end)];
+    %L = arrayfun(@num2str,l,'UniformOutput',false);
+    L = l;
+    set(gca,'XTick',l,'XTickLabel',L,'XTickLabelRotation',45);
+    xlim([1,N]);
+    
     legend({'Total descendant karma','Self karma'})
+    
+    title('User contribution to reddit in terms of total descendant post karma in 2015');
 end
